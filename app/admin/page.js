@@ -30,7 +30,7 @@ export default function AdminDashboard() {
     const token = match?.split("=")[1];
 
     if (token === "Jaishreeram@bm") setRole("full");
-    else if (token === "jai shreekrishna @123") setRole("readonly");
+    else if (token === "Jaishreekrishna@123") setRole("readonly");
     else setRole("none");
   }, [page]);
 
