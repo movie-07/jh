@@ -2,32 +2,27 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Content from '@/models/Content';
 
-// GET all with search and pagination
-export async function GET(req) {
+// GET /api/contents/[slug]
+export async function GET(req, { params }) {
   await connectDB();
-  const { searchParams } = new URL(req.url);
-  const q = searchParams.get('q') || '';
-  const page = parseInt(searchParams.get('page') || '1');
-  const limit = 20;
 
-  const filter = {
-    name: { $regex: q, $options: 'i' }
-  };
+  const slugParam = params.slug?.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
 
-  const contents = await Content.find(filter)
-    .sort({ createdAt: -1 })
-    .skip((page - 1) * limit)
-    .limit(limit);
+  if (!slugParam) {
+    return NextResponse.json({ error: 'Missing slug' }, { status: 400 });
+  }
 
-  const total = await Content.countDocuments(filter);
+  const allContents = await Content.find();
 
-  return NextResponse.json({ contents, total });
-}
+  const match = allContents.find((item) => {
+    const raw = item.slug || item.name || '';
+    const generatedSlug = raw.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+    return generatedSlug === slugParam;
+  });
 
-// POST
-export async function POST(req) {
-  await connectDB();
-  const data = await req.json();
-  const content = await Content.create(data);
-  return NextResponse.json(content);
+  if (!match) {
+    return NextResponse.json({ error: 'Not Found' }, { status: 404 });
+  }
+
+  return NextResponse.json(match);
 }
