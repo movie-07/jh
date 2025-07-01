@@ -5,18 +5,17 @@ import Content from '@/models/content';
 export async function GET(req, { params }) {
   await connectDB();
 
-  const slug = params.slug?.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+  const slug = params.slug?.toLowerCase().trim();
 
-  const content = await Content.findOne({
-    $or: [
-      { slug: slug },
-      { name: { $regex: new RegExp(`^${slug.replace(/-/g, ' ')}`, 'i') } }
-    ]
-  });
+  try {
+    const content = await Content.findOne({ slug });
 
-  if (!content) {
-    return NextResponse.json({ error: 'Not Found' }, { status: 404 });
+    if (!content) {
+      return NextResponse.json({ error: 'Content not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(content);
+  } catch (error) {
+    return NextResponse.json({ error: 'Server error', details: error.message }, { status: 500 });
   }
-
-  return NextResponse.json(content);
 }
