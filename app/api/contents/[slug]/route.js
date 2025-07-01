@@ -1,11 +1,6 @@
-import { NextResponse } from 'next/server';
-import connectDB from '@/lib/mongodb';
-import Content from '@/models/Content';
-
 export async function GET(req, { params }) {
-  await connectDB();
-
   const slugParam = params.slug?.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+
   const allContents = await Content.find();
 
   const match = allContents.find((item) => {
