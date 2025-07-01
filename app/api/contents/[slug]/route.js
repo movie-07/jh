@@ -1,12 +1,17 @@
-export async function GET(req, { params }) {
-  const slugParam = params.slug?.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+import { NextResponse } from 'next/server';
+import connectDB from '@/lib/mongodb';
+import Content from '@/models/Content';
 
+export async function GET(req, { params }) {
+  await connectDB();
+
+  const slugParam = params.slug.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
   const allContents = await Content.find();
 
   const match = allContents.find((item) => {
     const raw = item.slug || item.name || '';
-    const generatedSlug = raw.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
-    return generatedSlug === slugParam;
+    const generated = raw.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+    return generated === slugParam;
   });
 
   if (!match) {
@@ -14,4 +19,3 @@ export async function GET(req, { params }) {
   }
 
   return NextResponse.json(match);
-}
