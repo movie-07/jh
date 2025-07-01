@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Content from '@/models/Content';
 
-// GET all with search and pagination
+// GET /api/contents?page=1&q=...
 export async function GET(req) {
   await connectDB();
+
   const { searchParams } = new URL(req.url);
   const q = searchParams.get('q') || '';
   const page = parseInt(searchParams.get('page') || '1');
@@ -24,7 +25,7 @@ export async function GET(req) {
   return NextResponse.json({ contents, total });
 }
 
-// POST
+// POST /api/contents
 export async function POST(req) {
   await connectDB();
   const data = await req.json();
