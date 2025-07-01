@@ -1,26 +1,20 @@
-import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
-import Content from '@/models/content';
+import Content from '@/models/Content';
 
 export async function GET(req, { params }) {
   await connectDB();
 
   const slug = params.slug;
+  const content = await Content.findOne({ slug });
 
-  try {
-    const content = await Content.findOne({
-      slug: { $regex: new RegExp(`^${slug}$`, 'i') }, // case-insensitive match
+  if (!content) {
+    return new Response(JSON.stringify({ error: 'Content not found' }), {
+      status: 404,
     });
-
-    if (!content) {
-      return NextResponse.json({ error: 'Content not found' }, { status: 404 });
-    }
-
-    return NextResponse.json(content);
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Server error', details: error.message },
-      { status: 500 }
-    );
   }
+
+  return new Response(JSON.stringify(content), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  });
 }
