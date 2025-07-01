@@ -1,17 +1,11 @@
-import { NextResponse } from 'next/server';
-import connectDB from '@/lib/mongodb';
-import Content from '@/models/Content';
-
 export async function GET(req, { params }) {
-  await connectDB();
+  const slug = params.slug?.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
 
-  const slugParam = params.slug.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
   const allContents = await Content.find();
-
   const match = allContents.find((item) => {
     const raw = item.slug || item.name || '';
     const generated = raw.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
-    return generated === slugParam;
+    return generated === slug;
   });
 
   if (!match) {
@@ -19,3 +13,4 @@ export async function GET(req, { params }) {
   }
 
   return NextResponse.json(match);
+}
