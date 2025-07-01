@@ -42,13 +42,8 @@ import { Button } from '@/components/ui/button';
 
 export default function ContentCard({ data, onDelete, onEdit }) {
   return (
-<<<<<<< HEAD
     <div className="bg-white p-4 rounded-xl shadow space-y-2">
       <img src={data.img} className="w-full h-48 object-cover rounded" alt={data.name} />
-=======
-    <div className="bg-white p-4 rounded-xl shadow space-y-2" >
-      <img src={data.img} className="w-full h-48 object-cover rounded" /> 
->>>>>>> 4a9e367eb0b3542ccaa2048cdd9eb513e4f74a4b
       <h2 className="text-lg font-bold">{data.name}</h2>
       <p>⭐ {data.imdbRating} | 🎬 {data.type}</p>
       <div className="flex gap-2">

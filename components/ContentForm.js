@@ -91,7 +91,7 @@ export default function ContentForm({ initialData = null, onDone }) {
         onChange={(e) => updateField('type', e.target.value)}
       >
         <option value="movie">Movie</option>
-        <option value="webseries">Web Series</option>
+        <option value="webseries">Web</option>
       </select>
 
       {/* Download Links */}
