@@ -78,7 +78,7 @@ export default function ContentForm({ initialData = null, onDone }) {
       <Input placeholder="Background Image URL" value={form.img2} onChange={(e) => updateField('img2', e.target.value)} />
       <Input placeholder="IMDb Rating" value={form.imdbRating} onChange={(e) => updateField('imdbRating', e.target.value)} />
       <Textarea placeholder="Description" value={form.description} onChange={(e) => updateField('description', e.target.value)} />
-      <Input placeholder="IMDb Link" value={form.imdbLink} onChange={(e) => updateField('imdbLink', e.target.value)} />
+      <Input placeholder="IMDb Link fuck basnti" value={form.imdbLink} onChange={(e) => updateField('imdbLink', e.target.value)} />
       <Input
         placeholder="Genres (comma separated)"
         value={form.genre.join(',')}
