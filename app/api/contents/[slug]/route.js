@@ -5,10 +5,12 @@ import Content from '@/models/content';
 export async function GET(req, { params }) {
   await connectDB();
 
-  const slug = params.slug?.toLowerCase().trim();
+  const slug = params.slug;
 
   try {
-    const content = await Content.findOne({ slug });
+    const content = await Content.findOne({
+      slug: { $regex: new RegExp(`^${slug}$`, 'i') }, // case-insensitive match
+    });
 
     if (!content) {
       return NextResponse.json({ error: 'Content not found' }, { status: 404 });
@@ -16,6 +18,9 @@ export async function GET(req, { params }) {
 
     return NextResponse.json(content);
   } catch (error) {
-    return NextResponse.json({ error: 'Server error', details: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Server error', details: error.message },
+      { status: 500 }
+    );
   }
 }
